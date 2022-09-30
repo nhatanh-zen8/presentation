@@ -68,14 +68,15 @@
 
 # QA and discussion
 
-# References (TBD)
-[1] [Weak Consistency: A Generalized Theory and Optimistic Implementations for Distributed Transactions](https://pmg.csail.mit.edu/papers/adya-phd.pdf)
-[2] [A Critique of ANSI SQL Isolation Levels](https://arxiv.org/ftp/cs/papers/0701/0701157.pdf)
-[3] [Seeing is Believing: A Client-Centric Specification of Database Isolation](https://www.cs.cornell.edu/lorenzo/papers/Crooks18Seeing.pdf)
-[4] https://dantheengineer.com/database-isolation-levels/
-[5] http://mbukowicz.github.io/databases/2020/05/01/snapshot-isolation-in-postgresql.html
-[6] https://fauna.com/blog/introduction-to-transaction-isolation-levels
-[7] https://jepsen.io/consistency
+# References
+
+ - [1] [Weak Consistency: A Generalized Theory and Optimistic Implementations for Distributed Transactions](https://pmg.csail.mit.edu/papers/adya-phd.pdf)
+ - [2] [A Critique of ANSI SQL Isolation Levels](https://arxiv.org/ftp/cs/papers/0701/0701157.pdf)
+ - [3] [Seeing is Believing: A Client-Centric Specification of Database Isolation](https://www.cs.cornell.edu/lorenzo/papers/Crooks18Seeing.pdf)
+ - [4] https://dantheengineer.com/database-isolation-levels/
+ - [5] http://mbukowicz.github.io/databases/2020/05/01/snapshot-isolation-in-postgresql.html
+ - [6] https://fauna.com/blog/introduction-to-transaction-isolation-levels
+ - [7] https://jepsen.io/consistency
 
 # Extra level: Read atomic
 - https://bartoszsypytkowski.com/ramp/
