@@ -50,7 +50,7 @@
 - The standard isolation levels also have more precise definition under this framework
 
 # Isolation levels
-  ![](iso-ano.png)
+  ![](iso-ano.png){ width=90% height=90% }
 
 # Snapshot isolation
 - Multiversion concurrency control
@@ -64,7 +64,7 @@
 - Generalized isolation levels: consistency levels
 
 # Consistency levels
-  ![](con-level.png)
+  ![](con-level.png){ width=48% height=48% }
 
 # QA and discussion
 
