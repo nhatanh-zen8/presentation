@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+ "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="September 10, 2022" />
+  <title>CONCURRENCY ANOMALIES AND ISOLATION LEVELS IN RELATIONAL DATABASE</title>
+  <style type="text/css">
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" type="text/css" media="screen, projection, print"
+    href="https://www.w3.org/Talks/Tools/Slidy2/styles/slidy.css" />
+  <script src="https://www.w3.org/Talks/Tools/Slidy2/scripts/slidy.js"
+    charset="utf-8" type="text/javascript"></script>
+</head>
+<body>
+<div class="slide titlepage">
+  <h1 class="title">CONCURRENCY ANOMALIES AND ISOLATION LEVELS IN
+RELATIONAL DATABASE</h1>
+  <p class="author">
+September 10, 2022
+  </p>
+</div>
+<div id="concurrency" class="slide section level1">
+<h1>Concurrency</h1>
+<ul class="incremental">
+<li>Concurrency: multiple tasks executing in overlapping timeslices</li>
+<li>Race condition: different orders of interleaving steps of concurrent
+tasks can have different result</li>
+<li>Data race: concurrent tasks writing to and reading from the same
+data in interleaving, underterministic order</li>
+<li>Concurrency control: to control unwanted effects of concurrency</li>
+<li>In RDBMS, that usually means ACID transaction</li>
+</ul>
+</div>
+<div id="transaction" class="slide section level1">
+<h1>Transaction</h1>
+<ul class="incremental">
+<li>Transaction: a group of operations with deterministic order of
+executation, treated as a <em>single unit of work</em></li>
+<li>ACID properties of transaction:
+<ul class="incremental">
+<li><strong>A</strong>tomicity</li>
+<li><strong>C</strong>onsistency</li>
+<li><strong>I</strong>solation</li>
+<li><strong>D</strong>urability</li>
+</ul></li>
+</ul>
+</div>
+<div id="the-i-in-acid-isolation" class="slide section level1">
+<h1>The I in ACID: Isolation</h1>
+<ul class="incremental">
+<li>Isolation: concurrent transactions are indenpendently executed and
+cannot interfere with each other</li>
+<li>In reality, it’s not always desirable to enforce <em>perfect
+isolation</em> of transactions</li>
+<li>There are different level of isolations, each provides different
+guarantees</li>
+<li>Or more precisely, <em>which types of anomaly they admit and
+forbid</em></li>
+</ul>
+</div>
+<div id="anomalies-and-isolation-levels" class="slide section level1">
+<h1>Anomalies and isolation levels</h1>
+<ul class="incremental">
+<li>Anomalies: in this context, basically means unwanted concurrent data
+race effect</li>
+<li>ANSI SQL anomalies:
+<ul class="incremental">
+<li>Dirty read</li>
+<li>Non repeatable (fuzzy) read</li>
+<li>Phantom read</li>
+</ul></li>
+<li>ANSI SQL isolation levels:
+<ul class="incremental">
+<li>Uncommitted read: admits dirty read</li>
+<li>Committed read: admits non-repeatable read and phantom read (forbids
+dirty read)</li>
+<li>Repeatable read: admits phantom read (forbids dirty and non
+repeatable read)</li>
+<li>Serializable: forbids all three anomalies</li>
+</ul></li>
+<li>ANSI standard has long been considered ambiguous, incomplete and
+leaves room for different interpretations of each isolation levels in
+different RDBMS</li>
+</ul>
+</div>
+<div id="academic-definitions" class="slide section level1">
+<h1>Academic definitions</h1>
+<ul class="incremental">
+<li>Anomalies:
+<ul class="incremental">
+<li>P0: dirty write</li>
+<li>P1: dirty read</li>
+<li>P2: non-repeatable read</li>
+<li>P3: phantom read</li>
+<li>P4: lost update</li>
+<li>P4C: cursor lost update</li>
+<li>A5A: read skew</li>
+<li>A5B: write skew</li>
+</ul></li>
+<li>=&gt; As many isolation levels as there are valid combination of
+anomalies they admit</li>
+<li>Some are very practical levels that RDBMSs (and even other
+transactional system) widely implemented, but not defined in ANSI
+standard</li>
+<li>The standard isolation levels also have more precise definition
+under this framework</li>
+</ul>
+</div>
+<div id="isolation-levels" class="slide section level1">
+<h1>Isolation levels</h1>
+<p><img src="iso-ano.png" /></p>
+</div>
+<div id="snapshot-isolation" class="slide section level1">
+<h1>Snapshot isolation</h1>
+<ul class="incremental">
+<li>Multiversion concurrency control</li>
+<li>Many popular DBs (Postgres among those) actually implement
+repeatable read as snapshot isolation, since the standard can’t
+distinguish them</li>
+<li>MySQL’s InnoDB engine’s Read Committed level has an option to turn
+snapshot on</li>
+</ul>
+</div>
+<div id="beyond-transactional-semantics-cap-and-consistency-levels"
+class="slide section level1">
+<h1>Beyond transactional semantics: CAP and consistency levels</h1>
+<ul class="incremental">
+<li>ACID is about concurrent access to the same data store and doesn’t
+imply anything in distributed context</li>
+<li>CAP: Consistency (not the same as the one in ACID!), Availability,
+Partition tolerance</li>
+<li>CAP theorem: choose 2</li>
+<li>Generalized isolation levels: consistency levels</li>
+</ul>
+</div>
+<div id="consistency-levels" class="slide section level1">
+<h1>Consistency levels</h1>
+<p><img src="con-level.png" /></p>
+</div>
+<div id="qa-and-discussion" class="slide section level1">
+<h1>QA and discussion</h1>
+</div>
+<div id="references-tbd" class="slide section level1">
+<h1>References (TBD)</h1>
+<p>[1] <a href="https://pmg.csail.mit.edu/papers/adya-phd.pdf">Weak
+Consistency: A Generalized Theory and Optimistic Implementations for
+Distributed Transactions</a> [2] <a
+href="https://arxiv.org/ftp/cs/papers/0701/0701157.pdf">A Critique of
+ANSI SQL Isolation Levels</a> [3] <a
+href="https://www.cs.cornell.edu/lorenzo/papers/Crooks18Seeing.pdf">Seeing
+is Believing: A Client-Centric Specification of Database Isolation</a>
+[4] https://dantheengineer.com/database-isolation-levels/ [5]
+http://mbukowicz.github.io/databases/2020/05/01/snapshot-isolation-in-postgresql.html
+[6] https://fauna.com/blog/introduction-to-transaction-isolation-levels
+[7] https://jepsen.io/consistency</p>
+</div>
+<div id="extra-level-read-atomic" class="slide section level1">
+<h1>Extra level: Read atomic</h1>
+<ul class="incremental">
+<li>https://bartoszsypytkowski.com/ramp/</li>
+<li>http://muratbuffalo.blogspot.com/2022/02/ramp-tao-layering-atomic-transactions.html</li>
+</ul>
+</div>
+</body>
+</html>
