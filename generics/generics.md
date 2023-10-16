@@ -112,13 +112,13 @@ public interface Collection<E> extends Iterable<E> {...}
   there's no way the function can create a value of any `T` possible out of thin air, so the returned elements can only be a
   combination of the input array's elements. Or more interestingly, consider the following `Map` generic function: 
   ```go
-func Map[A any, B any](f func(a A) B, aArray []A) []B {
-	bArray := make([]B, len(aArray))
-	for k, v := range aArray {
-		bArray[k] = f(v)
-	}
-	return bArray
-}
+  func Map[A any, B any](f func(a A) B, aArray []A) []B {
+      bArray := make([]B, len(aArray))
+      for k, v := range aArray {
+          bArray[k] = f(v)
+      }
+      return bArray
+  }
   ```
 - This function takes a function from `A` to `B`, and an array with `A` elements, and returns an array with `B` elements. Since it
   must be universally applicable to all `A` and `B` types possible, one can only implement it by applying the function from `A` to
@@ -453,7 +453,7 @@ object Main {
   familiar first order predicate logic we learned and used in highschool's math classes.
 
 # Conclusion
-- We'll finally at the end of our rather lengthy tour (is it actually almost a journey at this point?) around the land of
+- We are finally at the end of our rather lengthy tour (is it actually almost a journey at this point?) around the land of
   generics. We brushed up the foundation of polymorphism and dive deeper into parametric polymorphism - generics - in particular,
   and its interplay when coexisting with other kinds of polymorphism with type bounds and variances. We then investigated how
   generics are typically implemented, and what implications the implementation approaches have over the performance of our generic
