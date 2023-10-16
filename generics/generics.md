@@ -466,7 +466,7 @@ public interface Collection<E> extends Iterable<E> {...}
   generics are typically implemented, and what implications the implementation approaches have over the performance of our generic
   code. Then we went a bit beyond the realm of everyday programming and ventured into the land of higher kinded type and higher
   ranked polymorphism, both advanced and very powerful type system features rarely encountered in mainstream programming
-  languages. We engineers at Zen8Labs encourage the use of programming language's type system to ensure code safety, correctness
+  languages. We engineers at zen8labs encourage the use of programming language's type system to ensure code safety, correctness
   and clarity, and furthermore to leverage type system as a design tool whenever the language of choice allows us to. At the end
   of the day, our goal is to consistently deliver reliable, maintainable and valuable software for our customers, and with
   generics in our toolset, we can confidently look forward to consistently meet that goal.
