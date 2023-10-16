@@ -1,5 +1,5 @@
-A Tour Around The Land Of Generics
-==================================
+Across The Land Of Generics
+===========================
 
 ![Cup of T](cup-of-t.jpeg)
 
@@ -456,7 +456,7 @@ public interface Collection<E> extends Iterable<E> {...}
   familiar first order predicate logic we learned and used in highschool's math classes.
 
 # Conclusion
-- We are finally at the end of our rather lengthy tour (is it actually almost a journey at this point?) around the land of
+- We are finally at the end of our rather lengthy tour (is it actually almost a journey at this point?) across the land of
   generics. We brushed up the foundation of polymorphism and dive deeper into parametric polymorphism - generics - in particular,
   and its interplay when coexisting with other kinds of polymorphism with type bounds and variances. We then investigated how
   generics are typically implemented, and what implications the implementation approaches have over the performance of our generic
