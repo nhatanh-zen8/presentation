@@ -341,16 +341,17 @@ public interface Collection<E> extends Iterable<E> {...}
   not as clean and succinct as the analogous method in Scala, but their goals coincided: you won't find yourself inserting a `Cat`
   into a `Collection<Dog>`, but instead a `Collection` of some unknown supertype of `Cat`. 
 - If everything in this section about variance seems complex or even convoluted, it's probably because it genuinely and inherently
-  is. The interplay between generics and inheritance is among the most complex features of mainstream programming languages.
-  As intimidating as the variances are, understanding them would entail a deeper appreciation of relations between types
-  (sub/supertype relations in OOP languages for example) and help us developers write both more polymorphic and type safe code.
+  is. The interplay between generics and inheritance is among the most complex features of mainstream programming languages. As
+  intimidating as the variances are, understanding them would entail a deeper appreciation of relations between types
+  (sub/supertype relations in OOP languages for example) and help us developers write code that are both more expressive and type
+  safe.
 - The astute readers might have realized that covariance, contravariance and invariance are *insufficient* to correctly model
   phantom type's behavior: covariant type parameters must only appear in covariant position, contravariant must only appear in
   contravariant position, invariant must be both (or else it must either be co-or contra-variant instead). Because a phantom type
   parameter never appears anywhere in the generic type's definition, it's neither in covariant or contravariant position, thus it
   also isn't invariant. We call this *phantom variance*, and currently the only language supporting phantom variance annotation in
   industrial use is Haskell, but it doesn't have inheritance, in fact it isn't object-oriented at all. Phantom variance currently
-  has limited use and is only mentioned for completeness, thus won't be discussed further in this blog post
+  has limited use and is only mentioned for completeness, thus won't be discussed further in this blog post.
 
 ![Lattice of variances](lattice.jpg)
 
