@@ -169,10 +169,10 @@ public interface Collection<E> extends Iterable<E> {...}
   possible to add 2 `USD` to 1000 `VND`, because they don't share the same unit, and you'd probably have to convert that 2 `USD`
   to equivalent value in `VND` first.
 
-- While we can use another field in the `Money` class to tag each `Money` value with a particular `Currency`,
-  that incurs non trivial runtime overhead, and most importantly the programmers must be mindful of checking that tag at runtime to
-  for example prevent adding 1000 `VND` to 3 `USD` to obtain 1003 of ... something invalid, because otherwise there really aren't
-  anything to prevent such operations. It's a win to have compilers able to automatically check these kinds of thing for you instead.
+- While we can use another field in the `Money` class to tag each `Money` value with a particular `Currency`, this incurs non
+  trivial runtime overhead, and most importantly the programmer must be mindful of checking that tag at runtime to, for example,
+  prevent adding 1000 `VND` to 3 `USD` to obtain 1003 of ... something invalid, because otherwise there really aren't anything to
+  prevent such operations. It's a win to have compilers able to automatically check these kinds of thing for you instead.
 
 ## Bounds/Contraints
 - Sometimes the universal restriction of parametricity can be too stricted, and we might need to be able to do more interesting
@@ -392,40 +392,42 @@ public interface Collection<E> extends Iterable<E> {...}
 - Higher kinded type has many advanced applications, most prominently for defining highly generic and reusable interfaces. Let's
   take a look at an example of an interface (`trait` in Scala) for collection/container types that we can `map` over i.e. transform
   each element of the collection/container using a given function:
+
   ```scala
-  trait Mappable[F[_]] {
-  def map[A, B](fa: F[A])(f: A => B): F[B]
-}
-
-object Main {
-  // implementation for Option
-  implicit val functorForOption: Mappable[Option] = new Mappable[Option] {
-    def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa match {
-      case None    => None
-      case Some(a) => Some(f(a))
+    trait Mappable[F[_]] {
+      def map[A, B](fa: F[A])(f: A => B): F[B]
     }
-  }
 
-  // implementation for List
-  implicit val functorForList: Mappable[List] = new Mappable[List] {
-    def map[A, B](la: List[A])(f: A => B): List[B] = la match {
-      case Nil    => Nil
-      case a :: rest => f(a) :: map(rest)(f)
+    object Main {
+      // implementation for Option
+      implicit val functorForOption: Mappable[Option] = new Mappable[Option] {
+        def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa match {
+          case None    => None
+            case Some(a) => Some(f(a))
+        }
+      }
+
+      // implementation for List
+      implicit val functorForList: Mappable[List] = new Mappable[List] {
+        def map[A, B](la: List[A])(f: A => B): List[B] = la match {
+          case Nil    => Nil
+            case a :: rest => f(a) :: map(rest)(f)
+        }
+      } 
+
+      // higher kinded typed map, works with every generic type that implements Mappable
+      def fmap[T[_], A, B](t: T[A])(f: A => B)(implicit m : Mappable[T]): T[B] = {
+        m.map(t)(f)
+      }
+
+      def main(args: Array[String]): Unit = {    
+        val mappedList = fmap(List(1,2,3))(_ + 1) // List(2,3,4)
+          val mappedOption = fmap(Some(4):Option[Int])(_ + 1) // Some(5)
+                                          println(mappedList, mappedOption)
+      }
     }
-  } 
-  
-  // higher kinded typed map, works with every generic type that implements Mappable
-  def fmap[T[_], A, B](t: T[A])(f: A => B)(implicit m : Mappable[T]): T[B] = {
-       m.map(t)(f)
-  }
-
-  def main(args: Array[String]): Unit = {    
-    val mappedList = fmap(List(1,2,3))(_ + 1) // List(2,3,4)
-    val mappedOption = fmap(Some(4):Option[Int])(_ + 1) // Some(5)
-    println(mappedList, mappedOption)
-  }
-}
   ```
+
 ## Higher ranked polymorphism
 - Another aspect where we can even be more polymorphic is the instantiation of the type parameters themselves. With vanilla
   generics, or even with higher kinded type, at the end of the day the use site of a generic value must be monomorphizable (even
