@@ -403,7 +403,7 @@ public interface Collection<E> extends Iterable<E> {...}
       implicit val functorForOption: Mappable[Option] = new Mappable[Option] {
         def map[A, B](fa: Option[A])(f: A => B): Option[B] = fa match {
           case None    => None
-            case Some(a) => Some(f(a))
+          case Some(a) => Some(f(a))
         }
       }
 
@@ -411,7 +411,7 @@ public interface Collection<E> extends Iterable<E> {...}
       implicit val functorForList: Mappable[List] = new Mappable[List] {
         def map[A, B](la: List[A])(f: A => B): List[B] = la match {
           case Nil    => Nil
-            case a :: rest => f(a) :: map(rest)(f)
+          case a :: rest => f(a) :: map(rest)(f)
         }
       } 
 
@@ -422,8 +422,8 @@ public interface Collection<E> extends Iterable<E> {...}
 
       def main(args: Array[String]): Unit = {    
         val mappedList = fmap(List(1,2,3))(_ + 1) // List(2,3,4)
-          val mappedOption = fmap(Some(4):Option[Int])(_ + 1) // Some(5)
-                                          println(mappedList, mappedOption)
+        val mappedOption = fmap(Some(4):Option[Int])(_ + 1) // Some(5)
+        println(mappedList, mappedOption)
       }
     }
   ```
