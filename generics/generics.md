@@ -39,7 +39,7 @@ Keywords: static type, type system, generics, polymorphism, software engineering
 - The first two are also classified as *universal polymosphism*, while the last two are *ad-hoc polymorphism*
 - Many popular languages have all 4 forms of polymorphism to varying extents, inducing interactions between them.
   As parametric polymorphism (generics) is the main focus of this blog post, we'll primarily explore the
-  generics/overloading interactions in *type bounds* and generics/inheritance interactions in *variant*
+  generics/overloading interactions in *type bounds* and generics/inheritance interactions in *variance*
 
 # Generics
 - Let's consider a motivating example using Golang, a major backend language in extensive use at zen8labs. Golang itself has very recently
@@ -436,6 +436,7 @@ public interface Collection<E> extends Iterable<E> {...}
 - The only language used in industry with support for higher ranked polymorphism is Haskell, so let's take at a simple example
   where we want a function that takes a list transformation, then applies it to a list of `b` and a list of `c`. A naive
   implementation would look like this:
+
 ```haskell
   transform :: ([a] -> [a]) -> [b] -> [c] -> ([b],[c])
   transform f bList cList = (f bList, f cList) -- compilation error
