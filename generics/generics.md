@@ -164,7 +164,7 @@ public interface Collection<E> extends Iterable<E> {...}
   ```
 - In the above snippet, we modeled `Money` as a wrapped integer value. Each `Money` value realistically should have its unit in
   some `Currency`, and we encoded that using a type parameter for the `Money` class: `<C extends Currency>` (this means `Currency`
-  is a lower type bound for `C`, which we'll explore in more detail in the next section). The type parameter `C` doesn't appear
+  is an upper type bound for `C`, which we'll explore in more detail in the next section). The type parameter `C` doesn't appear
   *anywhere* in the definition of `Money`, but its use is in the signature of method `add`, to guarantee by parametricity that we
   can only add the value of a `Money` to another of the same `Currency`, to obtain a new `Money` value, still of that same
   `Currency`. So it's fine to add 2 `USD` to 1 `USD` and obtain 3 `USD`, but it's not possible to add 2 `USD` to 1000 `VND`,
