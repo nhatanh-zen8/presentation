@@ -106,11 +106,12 @@ public interface Collection<E> extends Iterable<E> {...}
 ```
 ## Parametricity
 - When we have a family of structurally identical definition, we can generalize them into their generic version. It works the
-  other way too: if you have a type signature of what your function/method should have, the number of type-checked implementations is
-  typically restricted, since the definition must work *universally* for all possible types. Let's look at the `Filter` example
-  again: it takes an array of type `T` elements, and returns an array of type `T` elements. From the implementor's point of view,
-  there's no way the function can create a value of any `T` possible out of thin air, so the returned elements can only be a
-  combination of the input array's elements. Or more interestingly, consider the following `Map` generic function: 
+  other way too: if you have a type signature of what your function/method should have, the number of possible valid
+  implementations is typically restricted, since the definition must work *universally* for all possible types. Let's look at the
+  `Filter` example again: it takes an array of type `T` elements, and returns an array of type `T` elements. From the
+  implementor's point of view, there's no way the function can create a value of any `T` possible out of thin air, so the returned
+  elements can only be a combination of the input array's elements. Or more interestingly, consider the following `Map` generic
+  function: 
   ```go
   func Map[A any, B any](f func(a A) B, aArray []A) []B {
       bArray := make([]B, len(aArray))
