@@ -438,18 +438,22 @@ public interface Collection<E> extends Iterable<E> {...}
   implementation would look like this:
 
 ```haskell
-  transform :: ([a] -> [a]) -> [b] -> [c] -> ([b],[c])
-  transform f bList cList = (f bList, f cList) -- compilation error
+  transform2Lists :: ([a] -> [a]) -> [b] -> [c] -> ([b],[c])
+  transform2Lists f bList cList = (f bList, f cList) -- compilation error
 ```
 - The reason this fails to compile is because the compiler is unable to unify `a` with `b` (and `c` too, but `b` is where the type
   error occurs first). That is because at call site, the caller would definitely have to instantiate `a`, `b`, `c` with concrete
   types, and each of them could be a different type, so the compiler can't assume anything about all three, much less unifying
   them. What we *really* want here is to be able to pass a *polymorphic* function `f` at *call site*:
 ```haskell
-  transform :: (forall a. [a] -> [a]) -> [b] -> [c] -> ([b],[c])
-  transform f bList cList = (f bList, f cList) 
-  -- transform reverse [1,2,3] ["a","b","c"] => ([3,2,1],["c","b","a"])
+  transform2Lists :: (forall a. [a] -> [a]) -> [b] -> [c] -> ([b],[c])
+  transform2Lists f bList cList = (f bList, f cList) 
+  -- transform2Lists reverse [1,2,3] ["a","b","c"] => ([3,2,1],["c","b","a"])
 ```
+- The type of the function `f` that `transform2Lists` expects is now `forall a. a -> a`, meaning `f` is polymorphic *at the call
+  site* of `transform2Lists` and will only be instantiated into monomorphic function at call sites (plural!) in the body of
+  `transform2Lists`. Normal generic is called rank 1 polymorphism, and the type of `transform2Lists` is what we call a rank 2
+  polymorphic type, since you can pass a rank 1 polymorphic type as argument to `transform2Lists`.
 - Notice the `forall a.` in the type signature, and recall the connection we made between generics and logic. There is a
   correspondence between type systems and logic systems called the "Curry-Howard correspondence", and a type system with higher
   ranked polymorphism corresponds to higher order predicate logic. Normal type system with vanilla generics corresponds to the
