@@ -11,7 +11,7 @@ Keywords: static type, type system, generics, polymorphism, software engineering
 - Type system can be more than just a safety nest: many approaches to domain-driven development benefit from expressive type
   system as a *domain modeling tool*
 - Most dynamically typed languages in common use eventually supports static type to an extent: either using
-  optional type hints/type specs like Elixir and Python, or creating a full-blown backward-compatible statically typed language
+  optional type specs/type hints like Elixir and Python, or creating a full-blown backward-compatible statically typed language
   for an already existing dynamic language, like the case of Typescript and Javascript. As developers and software engineers at
   zen8labs, we've experienced first-hand this transition with Python and Javascript/Typescript and can testify for the ergonomics
   and productivity improvement.
