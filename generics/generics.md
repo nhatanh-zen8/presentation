@@ -31,8 +31,8 @@ Keywords: static type, type system, generics, polymorphism, software engineering
   + Inclusion polymorphism: types can be subtype of other types, and subtype can be used where supertype is expected. Also more
   commonly known as *inheritance* 
   + Overloading: one name/identifier can have multiple different definitions. Overloading exists in many incarnations in popular
-  programming languages: overloaded methods (Java et al) and operators (C++), interface (Java et al), trait(Rust, Scala), protocol (Swift)...
-  Most langauges at least support some forms of numeric operator overloading, e.g. normally `+` can be applied to both floating point types
+  programming languages: overloaded methods (Java et al) and operators (C++), interface (Java et al), trait (Rust, Scala), protocol (Swift)...
+  Most languages at least support some forms of numeric operator overloading, e.g. normally `+` can be applied to both floating point types
   and integral types. Sometimes `+` may even be overloaded with string concatenation too.
   + Coercion: value of a concrete type can be converted into another concrete type and used in the context of that other type.
   Most languages support at least some form of coercion between numeric types.
