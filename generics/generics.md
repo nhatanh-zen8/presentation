@@ -1,6 +1,8 @@
 A Tour Around The Land Of Generics
 ==================================
+
 ![Cup of T](cup-of-t.jpeg)
+
 Keywords: static type, type system, generics, polymorphism, software engineering
 # Introduction
 - Static typing is massively beneficial to the design and engineering of large systems
@@ -19,7 +21,9 @@ Keywords: static type, type system, generics, polymorphism, software engineering
   any of the benefits is to extend the type system with polymorphism.
 
 # Polymorphism
+
 ![Polymorphism classified](polymorphisms.jpg)
+
 - In programming context, polymorphism means a value or variable can have more than one type. According to Luca Cardelli's seminal
   papers "On Understanding Types, Abstractions and Polymorphism", there are 4 kinds of polymorphism:
   + Parametric polymorphism: type of a variable/value can be parameterized over a range of types. Also more commonly known as
@@ -208,7 +212,9 @@ func Map[A any, B any](f func(a A) B, aArray []A) []B {
   all" and "there exists" in logic. We'll come back to this later in this blog post.
 
 ## Variance: Co/Contra/Invariance
+
 ![Variances](hierarchy.png)
+
 - Let's say we have an `Animal` type, with `Dog` and `Cat` as its subtypes, and we have a generic container type `Container<A>`. A
   problem arises: as we have `Dog`/`Cat` being subtypes of `Animal`, what is the right inheritance relationship between
   `Container<Dog>`/`Container<Cat>` and `Container<Animal>`? An intuitive and naive approach would be considering
