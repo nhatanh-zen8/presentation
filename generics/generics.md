@@ -185,7 +185,7 @@ public interface Collection<E> extends Iterable<E> {...}
   trivial runtime overhead, and most importantly the programmer must be mindful of checking that tag at runtime to, for example,
   prevent adding 1000 `VND` to 3 `USD` to obtain 1003 of ... something invalid, because otherwise there really aren't anything to
   prevent such operations. It's a win to have compilers able to automatically check these kinds of thing for you instead. This is
-  what a functional programmer means by "making invalid states unrepresentable" by leveraging the type system, which is an
+  what functional programmers mean by "making invalid states unrepresentable" by leveraging the type system, which is an
   important tenet in functional programming, but still not yet widely known out of that circle. The example above was
   intentionally written using Java as a demonstration that at the time of writing this blog post, this is no longer an
   "impractical practice" only possible in niche languages, and we *can* already apply this tenet to improve code correctness in
