@@ -180,11 +180,15 @@ public interface Collection<E> extends Iterable<E> {...}
   `Currency`. So it's fine to add 2 `USD` to 1 `USD` and obtain 3 `USD`, but it's not possible to add 2 `USD` to 1000 `VND`,
   because they don't share the same unit, and you'd probably have to convert that 2 `USD` to equivalent value in `VND` first.
 
-  While we can use another field in the `Money` class to tag each `Money` value with a particular `Currency`, this incurs non
+  While we can use an extra field in the `Money` class to tag each `Money` value with a particular `Currency`, this incurs non
   trivial runtime overhead, and most importantly the programmer must be mindful of checking that tag at runtime to, for example,
   prevent adding 1000 `VND` to 3 `USD` to obtain 1003 of ... something invalid, because otherwise there really aren't anything to
-  prevent such operations. It's a win to have compilers able to automatically check these kinds of thing for you instead.
-
+  prevent such operations. It's a win to have compilers able to automatically check these kinds of thing for you instead. This is
+  what a functional programmer means by "making invalid states unrepresentable" by leveraging the type system, which is an
+  important tenet in functional programming, but still not yet widely known out of that circle. The example above was
+  intentionally written using Java as a demonstration that at the time of writing this blog post, this is no longer an
+  "impractical practice" only possible in niche languages, and we *can* already apply this tenet to improve code correctness in
+  even the most typical OOP language of them all.
 ## Bounds/Contraints
   Sometimes the universal restriction of parametricity can be too stricted, and we might need to be able to do more interesting
   things to the generic arguments the function receive. We can achieve it with *type bounds* or *type constraints*.
