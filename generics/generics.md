@@ -191,7 +191,7 @@ public interface Collection<E> extends Iterable<E> {...}
   even the most typical OOP language of them all.
 ## Bounds/Contraints
   Sometimes the universal restriction of parametricity can be too strict, and we might need to be able to do more interesting
-  things to the generic arguments the function receive. We can achieve it with *type bounds* or *type constraints*.
+  things to the generic arguments the function received. We can achieve it with *type bounds* or *type constraints*.
  
   The most commonly used kind of type bound is interface/protocol/trait implementation bound, meaning we can assert the type to be
   instantiated with the type variable must implements some overloading interface and thus the generic code can assume that type
@@ -228,7 +228,7 @@ public interface Collection<E> extends Iterable<E> {...}
   }
   ```
   If the phrase "for all" and "there exists" ring familiar to you, then they probably are: these terms come directly from the
-  familiar "for all" and "there exists" in logic. We'll come back to this later in this blog post.
+  good old "for all" and "there exists" in logic. We'll come back to this later in this blog post.
 
 ## Variance: Co/Contra/Invariance
 
