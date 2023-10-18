@@ -385,8 +385,8 @@ public interface Collection<E> extends Iterable<E> {...}
   function earlier in this blog post would reversely be transformed into function similar to the monomorphic `FilterInt` and
   `FilterString` to be used at call site with `Int` and `String` being instantiated, respectively.
 
-  Since generic code is transformed into its monomorphic counterpart anyway, there's just no performance overhead at all.
-  Instead, it takes more compilation time for all that code generation, and with all the code duplication, build artifacts
+  Since generic code is transformed into its monomorphic counterpart anyway, there's just no performance penalty at all.
+  Instead, it takes more compilation time for code generation, and with all the code duplication, build artifacts
   generally take more space than the alternative: type erasure.
 ## Type erasure
   In languages where most (if not all) values are "boxed" into homogenous references e.g. Java, we can alternatively implement
@@ -402,7 +402,8 @@ public interface Collection<E> extends Iterable<E> {...}
 
   Most modern languages that don't have to concern themselves with squeezing out every last bit of efficiency implement generics
   by type erasure though, since it's generally easier to use type erasure to implement other advanced type system features, such
-  as higher ranked polymorphism.
+  as higher ranked polymorphism. On the other hand, monomorphization can enable better code optimization at later phases of
+  compilation, because the compiler knows more specific type information at each use site and can optimize case by case accordingly.
 
 # Beyond generics
 ## Higher kinded type
