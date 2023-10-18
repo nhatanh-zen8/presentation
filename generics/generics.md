@@ -503,4 +503,4 @@ public interface Collection<E> extends Iterable<E> {...}
   of the day, our goal is to consistently deliver reliable, maintainable and valuable software for our customers, and with
   generics in our toolset, we can confidently look forward to consistently meet that goal.
   
- ----: *Anh Ngo, Software Engineer*
+ *Anh Ngo, Software Engineer*
