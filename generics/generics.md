@@ -188,7 +188,7 @@ public interface Collection<E> extends Iterable<E> {...}
   important tenet in functional programming, but still not yet widely known out of that circle. The example above was
   intentionally written using Java as a demonstration that at the time of writing this blog post, this is no longer an
   "impractical practice" only possible in niche languages, and we *can* already apply this tenet to improve code correctness in
-  even the most typical OOP language of them all.
+  even the most widely used OOP language of them all.
 ## Bounds/Contraints
   Sometimes the universal restriction of parametricity can be too strict, and we might need to be able to do more interesting
   things to the generic arguments the function received. We can achieve it with *type bounds* or *type constraints*.
