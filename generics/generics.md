@@ -9,7 +9,7 @@ Keywords: static type, type system, generics, polymorphism, software engineering
   classes of programming error before execution, clarify how pieces of a program fit together and enable fearless refactoring.
   Furthermore, type system can be more than just a safety nest: types provide "metadata" of sort to help development tools to know
   more about your code and enhance effectiveness, including smarter autocompletion engine, better suggestions from linter and even
-  automated implementation generation in some case. The benefits of type systems go beyond pure programming: many approaches to
+  automated program synthesis in some case. The benefits of type systems go beyond pure programming: many approaches to
   domain-driven design also benefit from expressive type system as a *domain modeling tool*.
  
   On the other side of the spectrum, dynamic typing are generally perceived as more flexible and faster to develop with. But the
