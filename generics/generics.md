@@ -190,7 +190,7 @@ public interface Collection<E> extends Iterable<E> {...}
   "impractical practice" only possible in niche languages, and we *can* already apply this tenet to improve code correctness in
   even the most typical OOP language of them all.
 ## Bounds/Contraints
-  Sometimes the universal restriction of parametricity can be too stricted, and we might need to be able to do more interesting
+  Sometimes the universal restriction of parametricity can be too strict, and we might need to be able to do more interesting
   things to the generic arguments the function receive. We can achieve it with *type bounds* or *type constraints*.
  
   The most commonly used kind of type bound is interface/protocol/trait implementation bound, meaning we can assert the type to be
