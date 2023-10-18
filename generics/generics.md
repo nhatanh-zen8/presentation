@@ -190,11 +190,10 @@ public interface Collection<E> extends Iterable<E> {...}
   things to the generic arguments the function receive. We can achieve it with *type bounds* or *type constraints*.
  
   The most commonly used kind of type bound is interface/protocol/trait implementation bound, meaning we can assert the type to be
-  instantiated with the type variable must implements some overloading interface. Another common kind of bound is upper
-  bound, where we assert the supertype the type extends. With these bounds, the implementation knows what
-  operations/functions/methods can be used with the generic arguments.
- 
-  There are other kinds of type bound too: lifetime bounds in Rust, lower bound in Java, type equality bound in Haskell...
+  instantiated with the type variable must implements some overloading interface. Another common kind of bound is upper bound,
+  where we assert the supertype the type extends. With these bounds, the implementation knows what operations/functions/methods
+  can be used with the generic arguments. With different type systems, there may come other kinds of type bound too, like lifetime
+  bounds in Rust, lower bound in Java or type equality bound in Haskell.
 
 ## Existentials/Wildcards
   Recall that type parameters are *universally quantified*: definition site of a generic value (e.g. the one who
@@ -223,8 +222,8 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   }
   ```
-  If the phrase "for all" and "there exists" ring familiar to you, then it probably is: they directly come from the familiar "for
-  all" and "there exists" in logic. We'll come back to this later in this blog post.
+  If the phrase "for all" and "there exists" ring familiar to you, then they probably are: these terms come directly from the
+  familiar "for all" and "there exists" in logic. We'll come back to this later in this blog post.
 
 ## Variance: Co/Contra/Invariance
 
