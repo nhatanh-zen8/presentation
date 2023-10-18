@@ -502,3 +502,5 @@ public interface Collection<E> extends Iterable<E> {...}
   and clarity, and furthermore to leverage type system as a design tool whenever the language of choice allows us to. At the end
   of the day, our goal is to consistently deliver reliable, maintainable and valuable software for our customers, and with
   generics in our toolset, we can confidently look forward to consistently meet that goal.
+  
+                                                                                  *Anh Ngo, Software Engineer*
