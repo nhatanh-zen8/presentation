@@ -5,27 +5,32 @@ Across The Land Of Generics
 
 Keywords: static type, type system, generics, polymorphism, software engineering
 # Introduction
-- Static typing is massively beneficial to the design and engineering of large systems
-- A good static type system can remove large classes of programming error before execution, clarify how pieces of a program fit
-  together, enable fearless refactoring and provide "metadata" of sort to help development tools, including smarter autocompletion and linting.
-- Type system can be more than just a safety nest: many approaches to domain-driven development benefit from expressive type
-  system as a *domain modeling tool*
-- Most dynamically typed languages in common use eventually supports static type to an extent: either using
-  optional type specs/type hints like Elixir and Python, or creating a full-blown backward-compatible statically typed language
-  for an already existing dynamic language, like the case of Typescript and Javascript. As developers and software engineers at
-  zen8labs, we've experienced first-hand this transition with Python and Javascript/Typescript and can testify for the ergonomics
-  and productivity improvement.
-- On the other hand, a static type system too constrained may even reject logically correct programs. Most of the time, a too
-  limiting (and limited) type system also reduces expressiveness which lead to code duplication.
-- One proven approach to approximate the expressiveness of static languages to dynamic languages without sacrificing
-  any of the benefits is to extend the type system with polymorphism.
+  Static typing is massively beneficial to the design and engineering of large systems: a good static type system can remove large
+  classes of programming error before execution, clarify how pieces of a program fit together and enable fearless refactoring.
+  Furthermore, type system can be more than just a safety nest: types provide "metadata" of sort to help development tools to know
+  more about your code and enhance effectiveness, including smarter autocompletion engine, better suggestions from linter and even
+  automated implementation generation in some case. The benefits of type systems go beyond development: many approaches to
+  domain-driven development also benefit from expressive type system as a *domain modeling tool*.
+ 
+  On the other side of the spectrum, dynamic typing are generally perceived as more flexible and faster to develop with. But the
+  recent trend for many dynamically typed languages in common use are gradually shifting to "parially" static type to varying
+  extent: either by using optional type specs/type hints like Elixir and Python, or by creating a full-blown backward-compatible
+  statically typed language for an already existing dynamic language, in the case of Typescript and Javascript. As developers and
+  software engineers at zen8labs, we've experienced first-hand this transition with Python and Javascript/Typescript and can
+  testify for the ergonomics and productivity improvement.
+ 
+  On the other hand, a static type system too constrained may even reject logically correct programs. Most of the time, a too
+  limiting (and limited) type system also reduces expressiveness which lead to code duplication. One proven approach to
+  approximate the expressiveness of static languages to dynamic languages without sacrificing any of the benefits is to extend the
+  type system with polymorphism.
 
 # Polymorphism
 
 ![Polymorphism classified](polymorphisms.jpg)
 
-- In programming context, polymorphism means a value or variable can have more than one type. According to Luca Cardelli's seminal
+  In programming context, polymorphism means a value or variable can have more than one type. According to Luca Cardelli's seminal
   papers "On Understanding Types, Abstractions and Polymorphism", there are 4 kinds of polymorphism:
+
   + Parametric polymorphism: type of a variable/value can be parameterized over a range of types. Also more commonly known as
   *generics*.
   + Inclusion polymorphism: types can be subtype of other types, and subtype can be used where supertype is expected. Also more
@@ -36,13 +41,14 @@ Keywords: static type, type system, generics, polymorphism, software engineering
   and integral types. Sometimes `+` may even be overloaded with string concatenation too.
   + Coercion: value of a concrete type can be converted into another concrete type and used in the context of that other type.
   Most languages support at least some form of coercion between numeric types.
-- The first two are also classified as *universal polymosphism*, while the last two are *ad-hoc polymorphism*
-- Many popular languages have all 4 forms of polymorphism to varying extents, inducing interactions between them.
+
+  The first two are also classified as *universal polymosphism*, while the last two are *ad-hoc polymorphism*
+  Many popular languages have all 4 forms of polymorphism to varying extents, inducing interactions between them.
   As parametric polymorphism (generics) is the main focus of this blog post, we'll primarily explore the
   generics/overloading interactions in *type bounds* and generics/inheritance interactions in *variance*
 
 # Generics
-- Let's consider a motivating example using Golang, a major backend language in extensive use at zen8labs. Golang itself has very recently
+  Let's consider a motivating example using Golang, a major backend language in extensive use at zen8labs. Golang itself has very recently
   gone through the transition to incorporate generics into their language, so this example is gonna be something taken directly
   from production codebase. Suppose we want to write a function taking an array of string and returning the elements of that array
   satisfying a predicate:
@@ -57,7 +63,7 @@ func FilterString(f func(a string) bool, amap []string) []string {
 	return res
 }
 ```
-- After a while, turns out we also need to filter array of integers too:
+  After a while, turns out we also need to filter array of integers too:
 ```go
 func FilterInt(f func(a int) bool, amap []int) []int {
 	var res []int
@@ -69,7 +75,7 @@ func FilterInt(f func(a int) bool, amap []int) []int {
 	return res
 }
 ```
-- The two functions are structurally almost identical, the only difference is the type of the array's element and correspondingly
+  The two functions are structurally almost identical, the only difference is the type of the array's element and correspondingly
   the input type of the predicate. In fact, we can have infinitely many such structurally identical functions for infitely many
   types. What we want is a way to universally abstract this same logic over all possible types, just like the way a function universally
   abstract the same logic over all possible values of its parameters. That's where the "scientific ID" `parametric polymorphism`
@@ -85,20 +91,22 @@ func Filter[T any](f func(a T) bool, amap []T) []T {
 	return res
 }
 ```
-- A very observable change to the "monomorphic" versions is, we have `[T any]` instead of "String" and "Int" in the function name,
+  A very observable change to the "monomorphic" versions is, we have `[T any]` instead of "String" and "Int" in the function name,
   and `T` now stands for the occurrences of `string`/`int` in type signatures in the function. `T` in this example is what we call
   a *type parameter*, because it is exactly like a function parameter, analoguous to how parameters are passed to functions at the
   more familiar value level. The `[T any]` construct introduces type parameter `T` to the rest of the following type signature,
   with `any` being a *type bound* or *type constraint*, which we'll explore soon after this, for now it's sufficient to read `[T
   any]` as "For all type `T` possible".
-- While generics were remembered by most as being introduced by C++'s Template system in the early 90s, and later as its
+
+  While generics were remembered by most as being introduced by C++'s Template system in the early 90s, and later as its
   incarnation introduced in Java in 2004, the origin of generics went much further, with the term "parametric polymorphism" first
   appeared in 1967. The first programming language implemented parametric polymorphism was ML (MetaLanguage) in 1973, using the
   Hindley-Milner type system capable of *full type inference* for every definition and expression, meaning the compiler can infer
   the most general type even if your whole program never had any type annotation. This is not compatible with inheritance, so most
   modern programming languages with both generics and inheritance only restrict type inference to local variables. With full type
   inference, you can write statically typed programs without type annotations just like in dynamically typed languages.
-- Function/method's type signature isn't the only place where we can introduce type variables. Most languages with generics support also
+
+  Function/method's type signature isn't the only place where we can introduce type variables. Most languages with generics support also
   allow type parameters in type and interface definition:
 ```java
 public class ArrayList<E> extends AbstractList<E> implements List<E> {...}
@@ -121,18 +129,20 @@ public interface Collection<E> extends Iterable<E> {...}
       return bArray
   }
   ```
-- This function takes a function from `A` to `B`, and an array with `A` elements, and returns an array with `B` elements. Since it
+  This function takes a function from `A` to `B`, and an array with `A` elements, and returns an array with `B` elements. Since it
   must be universally applicable to all `A` and `B` types possible, one can only implement it by applying the function from `A` to
   `B` to some elements of `aArray` to obtain some elements of type `B` to create `bArray`.
-- This property is called *parametricity*, and it can vastly improve reasoning and code comprehension: you can already tell a lot
+ 
+  This property is called *parametricity*, and it can vastly improve reasoning and code comprehension: you can already tell a lot
   about the semantics of a piece of code just from its type signature, without even looking at its implementation. Some compilers
   even take advantage of it to do semantics preserving code transformations and optimizations.
-- Unfortunately, if a generic piece of code also uses facilities like reflection or type casting, then parametricity is lost:
+ 
+  Unfortunately, if a generic piece of code also uses facilities like reflection or type casting, then parametricity is lost:
   after all if you can tell what concrete type a type parameter is at runtime, you can call the corresponding constructor to
   create new values of that type out of thin air. 
 
 ## Parametricity: the phantom type pattern
-- One application of parametricity is the phantom type pattern. As the name suggest, a "phantom" type means a type parameter that
+  One application of parametricity is the phantom type pattern. As the name suggest, a "phantom" type means a type parameter that
   doesn't "materialize" anywhere in the generic type's definition. Why would such a type parameter even be, well, not useless?
   Because we can use them to guarantee correctness at compile time. Consider the following Java snippet:
   ```java
@@ -162,7 +172,7 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   }
   ```
-- In the above snippet, we modeled `Money` as a wrapped integer value. Each `Money` value realistically should have its unit in
+  In the above snippet, we modeled `Money` as a wrapped integer value. Each `Money` value realistically should have its unit in
   some `Currency`, and we encoded that using a type parameter for the `Money` class: `<C extends Currency>` (this means `Currency`
   is an upper type bound for `C`, which we'll explore in more detail in the next section). The type parameter `C` doesn't appear
   *anywhere* in the definition of `Money`, but its use is in the signature of method `add`, to guarantee by parametricity that we
@@ -170,28 +180,32 @@ public interface Collection<E> extends Iterable<E> {...}
   `Currency`. So it's fine to add 2 `USD` to 1 `USD` and obtain 3 `USD`, but it's not possible to add 2 `USD` to 1000 `VND`,
   because they don't share the same unit, and you'd probably have to convert that 2 `USD` to equivalent value in `VND` first.
 
-- While we can use another field in the `Money` class to tag each `Money` value with a particular `Currency`, this incurs non
+  While we can use another field in the `Money` class to tag each `Money` value with a particular `Currency`, this incurs non
   trivial runtime overhead, and most importantly the programmer must be mindful of checking that tag at runtime to, for example,
   prevent adding 1000 `VND` to 3 `USD` to obtain 1003 of ... something invalid, because otherwise there really aren't anything to
   prevent such operations. It's a win to have compilers able to automatically check these kinds of thing for you instead.
 
 ## Bounds/Contraints
-- Sometimes the universal restriction of parametricity can be too stricted, and we might need to be able to do more interesting
+  Sometimes the universal restriction of parametricity can be too stricted, and we might need to be able to do more interesting
   things to the generic arguments the function receive. We can achieve it with *type bounds* or *type constraints*.
-- The most commonly used kind of type bound is interface/protocol/trait implementation bound, meaning we can assert the type to be
+ 
+  The most commonly used kind of type bound is interface/protocol/trait implementation bound, meaning we can assert the type to be
   instantiated with the type variable must implements some overloading interface. Another common kind of bound is upper
   bound, where we assert the supertype the type extends. With these bounds, the implementation knows what
   operations/functions/methods can be used with the generic arguments.
-- There are other kinds of type bound too: lifetime bounds in Rust, lower bound in Java, type equality bound in Haskell...
+ 
+  There are other kinds of type bound too: lifetime bounds in Rust, lower bound in Java, type equality bound in Haskell...
 
 ## Existentials/Wildcards
-- Recall that type parameters are *universally quantified*: definition site of a generic value (e.g. the one who
+  Recall that type parameters are *universally quantified*: definition site of a generic value (e.g. the one who
   implemented the generic function like `Filter` above) can't assume anything about the concrete type, while usage site (e.g.
   the caller of `Filter`) decides which type to instantiate the type parameters as.
-- Dual to this, we have *existential quantified* types, where definition site of an existentially quantified value decides which type
+ 
+  Dual to this, we have *existential quantified* types, where definition site of an existentially quantified value decides which type
   to instantiate, while usage site can't assume anything. We can only claim that "there exists a type", possibly satisfies certain
   type bound.
-- A familiar form of existentially quantified type is Java's `wildcard` (`<?>`):
+ 
+  A familiar form of existentially quantified type is Java's `wildcard` (`<?>`):
   ```java
   class Main {
     public static void printList(List<Object> ls) {
@@ -209,14 +223,14 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   }
   ```
-- If the phrase "for all" and "there exists" ring familiar to you, then it probably is: they directly come from the familiar "for
+  If the phrase "for all" and "there exists" ring familiar to you, then it probably is: they directly come from the familiar "for
   all" and "there exists" in logic. We'll come back to this later in this blog post.
 
 ## Variance: Co/Contra/Invariance
 
 ![Variances](hierarchy.png)
 
-- Let's say we have an `Animal` type, with `Dog` and `Cat` as its subtypes, and we have a generic container type `Container<A>`. A
+  Let's say we have an `Animal` type, with `Dog` and `Cat` as its subtypes, and we have a generic container type `Container<A>`. A
   problem arises: as we have `Dog`/`Cat` being subtypes of `Animal`, what is the right inheritance relationship between
   `Container<Dog>`/`Container<Cat>` and `Container<Animal>`? An intuitive and naive approach would be considering
   `Container<Dog>`/`Container<Cat>` also being subtypes of `Container<Animal>`, in academic jargons this kind of relationship is
@@ -246,7 +260,7 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   }
 ```
-- What if we try the exact opposite of covariance (i.e. *contravariance*): making `Container<Animal>` a subtype of `Container<Dog>`/`Container<Cat>`?
+  What if we try the exact opposite of covariance (i.e. *contravariance*): making `Container<Animal>` a subtype of `Container<Dog>`/`Container<Cat>`?
 ```java
   class Main {
     public static void main(String[] args) {
@@ -256,7 +270,7 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   }
 ```
-- This obviously still leads to type system inconsistency that in turn results in runtime exception. Interestingly, in the former
+  This obviously still leads to type system inconsistency that in turn results in runtime exception. Interestingly, in the former
   case we lose type safety under write, while in the latter case we lose type safety under read. Either way, does that mean
   there's fundamentally no inheritance relationship between generic types instantiated with types in an inheritance hierarchy
   whatsover? Not necessarily so: sometimes the only relationship we can assert between type `F<A>` and `F<B>` given `A` and `B` is
@@ -265,7 +279,8 @@ public interface Collection<E> extends Iterable<E> {...}
   generic type's type variables are covariant or contravariant w.r.t. that generic type, including but not limited to Scala,
   Kotlin, Swift and OCaml. In the coming examples we'll use Scala's syntax for similarity to Java, and its brevity in expressing
   co/contravariance: covariant mark being `+` and contravariant mark being `-`.
-- First let's take another look the covariant case above. Observe that the root cause of type safety loss is the *mutation* of
+
+  First let's take another look the covariant case above. Observe that the root cause of type safety loss is the *mutation* of
   `Container<A>` values. If the type is immutable, there is no unsafe write, and we can safely use the type as being covariant in
   `A`. More concretely in Scala:
   ```scala
@@ -290,7 +305,7 @@ public interface Collection<E> extends Iterable<E> {...}
       }
     }
   ```
-- For the contravariant case, we can't just contravariantly mark `A` as `-A` like in the covariant case, since Scala's type
+  For the contravariant case, we can't just contravariantly mark `A` as `-A` like in the covariant case, since Scala's type
   checker would complain that we are using a contravariant type parameter in covariant position. What does this even mean? To put
   it simply, a type is in covariant position when we can sort of "produce" a value of that type from the given "outer" type, e.g.
   we can get the field `val item: A` given a value of type `Container[A]`. In contrast, a type is in contravariant position when
@@ -311,11 +326,12 @@ public interface Collection<E> extends Iterable<E> {...}
       }
     }
   ```
-- Using this same line of reasoning, we can understand why mutable generic types like `Container<A>` in the Java example must be
+  Using this same line of reasoning, we can understand why mutable generic types like `Container<A>` in the Java example must be
   invariant: the `A member` field is in covariant position, but you can consume its value by mutating it to another value, which
   should make it contravariant, so type parameter `A` must be invariant. For historical reason, `Array` and only `Array` in Java
   is covariant, which led to countless troubles in the past.
-- There's one commonly arisen trouble with variance. Consider the `Container` class above, naturally we would like to have an
+
+  There's one commonly arisen trouble with variance. Consider the `Container` class above, naturally we would like to have an
   `insert` method to extend a `Container` with a new element:
   ```scala
     class Container[+A](val item: A) {
@@ -335,17 +351,20 @@ public interface Collection<E> extends Iterable<E> {...}
   of `A` instead. Obviously `insert`ing a `Cat` to a `Container[Cat]` is allowed, but now if you try to `insert` a `Dog` to a
   `Container[Cat]`, the type system would infer `S` to be `Animal`, since `Animal` is a supertype of `Cat` and a `Dog` is an
   `Animal`. The result is then a `Container[Animal]`, so type safety is still guaranteed.
-- In some languages with the so-called use site variance annotation like Java, we can only specify variance at method definition
+
+  In some languages with the so-called use site variance annotation like Java, we can only specify variance at method definition
   (since generic classes and interfaces don't have a way to annotate variance) using bounded wildcard, like the signature of the
   standard library method `Collection.addAll`: `public static <T> boolean addAll(Collection<? super T> c, T... elements)`. It's
   not as clean and succinct as the analogous method in Scala, but their goals coincided: you won't find yourself inserting a `Cat`
   into a `Collection<Dog>`, but instead a `Collection` of some unknown supertype of `Cat`. 
-- If everything in this section about variance seems complex or even convoluted, it's probably because it genuinely and inherently
+
+  If everything in this section about variance seems complex or even convoluted, it's probably because it genuinely and inherently
   is. The interplay between generics and inheritance is among the most complex features of mainstream programming languages. As
   intimidating as the variances are, understanding them would entail a deeper appreciation of relations between types
   (sub/supertype relations in OOP languages for example) and help us developers write code that are both more expressive and type
   safe.
-- The astute readers might have realized that covariance, contravariance and invariance are *insufficient* to correctly model
+
+  The astute readers might have realized that covariance, contravariance and invariance are *insufficient* to correctly model
   phantom type's behavior: covariant type parameters must only appear in covariant position, contravariant must only appear in
   contravariant position, invariant must be both (or else it must either be co-or contra-variant instead). Because a phantom type
   parameter never appears anywhere in the generic type's definition, it's neither in covariant or contravariant position, thus it
@@ -356,42 +375,46 @@ public interface Collection<E> extends Iterable<E> {...}
 ![Lattice of variances](lattice.jpg)
 
 # Implementation and efficiency
-- Hopefully at this point we've all come to the agreement that generics is a great abstraction that can profoundly improves both code quality, safety
+  Hopefully at this point we've all come to the agreement that generics is a great abstraction that can profoundly improves both code quality, safety
   and the language's modelling power. But don't all abstractions come at a cost? Not the case for so-called "zero cost
   abstractions" like generics! At least, not runtime cost, thanks to two commonly used implementation strategies: monomorphization
   and type erasure.
 ## Monomorphization
-- "Monomorphic" is the opposite of "polymorphic", and the act of "monomorphization" is to make polymorphic code into monomorphic
+  "Monomorphic" is the opposite of "polymorphic", and the act of "monomorphization" is to make polymorphic code into monomorphic
   code. What that means here is, during compilation the compiler takes generic code at each use site, specialize it to the
   concrete type being instantiated there to generate corresponding monomorphic code instead. For example, the generic `Filter`
   function earlier in this blog post would reversely be transformed into function similar to the monomorphic `FilterInt` and
   `FilterString` to be used at call site with `Int` and `String` being instantiated, respectively.
-- Since generic code is transformed into its monomorphic counterpart anyway, there's just no performance overhead at all.
+
+  Since generic code is transformed into its monomorphic counterpart anyway, there's just no performance overhead at all.
   Instead, it takes more compilation time for all that code generation, and with all the code duplication, build artifacts
   generally take more space than the alternative: type erasure.
 ## Type erasure
-- In languages where most (if not all) values are "boxed" into homogenous references e.g. Java, we can alternatively implement
+  In languages where most (if not all) values are "boxed" into homogenous references e.g. Java, we can alternatively implement
   generics by *erasing type information* and everything is left as homogenous pointer of same size and layout pointing to
   heterogenous actual object with different layout elsewhere in memory. The erasure happens after type checking is done, so type
   safety isn't compromised. Effectively, instead of going from "polymorphic type" to "monomorphic type", this is a more drastic
   transformation from polymorphism to uni/untypeness.
-- This has obvious upside to monomorphization, since there's no need to generate the almost identical code over and over again for
+
+  This has obvious upside to monomorphization, since there's no need to generate the almost identical code over and over again for
   different instantiated types, thus remarkably reduces build products size. There is of course a trade off here: since everything
   *must* be boxed and effectively is used as a pointer, it incurs all of the overhead associated with pointer indirection, plus
   the allocation for pointers themselves when it could be sufficient to directly use the unboxed, raw value.
-- Most modern languages that don't have to concern themselves with squeezing out every last bit of efficiency implement generics
+
+  Most modern languages that don't have to concern themselves with squeezing out every last bit of efficiency implement generics
   by type erasure though, since it's generally easier to use type erasure to implement other advanced type system features, such
   as higher ranked polymorphism.
 
 # Beyond generics
 ## Higher kinded type
-- Generics as commonly implemented is still not the complete form of parametric polymorphism. For example, going back to the analogy
+  Generics as commonly implemented is still not the complete form of parametric polymorphism. For example, going back to the analogy
   with value level function, we can see generic types as functions from type to type. Following this analogy even further, can we
   have something corresponding to higher order functions, i.e. functions that can take and/or return other functions? At the type
   level, that means a generic type that can be parameterized with other generic type, resulting in a new generic type. We call
   this *higher kinded type*. The only two languages currently in industrial use with higher kinded type are Haskell and Scala,
   this blog post will continue to use examples in Scala for the sake of consistency.
-- Higher kinded type has many advanced applications, most prominently for defining highly generic and reusable interfaces. Let's
+
+  Higher kinded type has many advanced applications, most prominently for defining highly generic and reusable interfaces. Let's
   take a look at an example of an interface (`trait` in Scala) for collection/container types that we can `map` over i.e. transform
   each element of the collection/container using a given function:
 
@@ -431,11 +454,12 @@ public interface Collection<E> extends Iterable<E> {...}
   ```
 
 ## Higher ranked polymorphism
-- Another aspect where we can even be more polymorphic is the instantiation of the type parameters themselves. With vanilla
+  Another aspect where we can even be more polymorphic is the instantiation of the type parameters themselves. With vanilla
   generics, or even with higher kinded type, at the end of the day the use site of a generic value must be monomorphizable (even
   if you implement generics using type erasure), meaning you have to instantiate all type variables so that you always eventually
   end up with monomorphic type. Higher ranked polymorphism lifts this restriction for generic functions in particular.
-- The only language used in industry with support for higher ranked polymorphism is Haskell, so let's take at a simple example
+
+  The only language used in industry with support for higher ranked polymorphism is Haskell, so let's take at a simple example
   where we want a function that takes a list transformation, then applies it to a list of `b` and a list of `c`. A naive
   implementation would look like this:
 
@@ -443,7 +467,7 @@ public interface Collection<E> extends Iterable<E> {...}
   transform2Lists :: ([a] -> [a]) -> [b] -> [c] -> ([b],[c])
   transform2Lists f bList cList = (f bList, f cList) -- compilation error
 ```
-- The reason this fails to compile is because the compiler is unable to unify `a` with `b` (and `c` too, but `b` is where the type
+  The reason this fails to compile is because the compiler is unable to unify `a` with `b` (and `c` too, but `b` is where the type
   error occurs first). That is because at call site, the caller would definitely have to instantiate `a`, `b`, `c` with concrete
   types, and each of them could be a different type, so the compiler can't assume anything about all three, much less unifying
   them. What we *really* want here is to be able to pass a *polymorphic* function `f` at *call site*:
@@ -452,17 +476,18 @@ public interface Collection<E> extends Iterable<E> {...}
   transform2Lists f bList cList = (f bList, f cList) 
   -- transform2Lists reverse [1,2,3] ["a","b","c"] => ([3,2,1],["c","b","a"])
 ```
-- The type of the function `f` that `transform2Lists` expects is now `forall a. a -> a`, meaning `f` is polymorphic *at the call
+  The type of the function `f` that `transform2Lists` expects is now `forall a. a -> a`, meaning `f` is polymorphic *at the call
   site* of `transform2Lists` and will only be instantiated into monomorphic function at call sites (plural!) in the body of
   `transform2Lists`. Normal generic is called rank 1 polymorphism, and the type of `transform2Lists` is what we call a rank 2
   polymorphic type, since you can pass a rank 1 polymorphic type as argument to `transform2Lists`.
-- Notice the `forall a.` in the type signature, and recall the connection we made between generics and logic. There is a
+
+  Notice the `forall a.` in the type signature, and recall the connection we made between generics and logic. There is a
   correspondence between type systems and logic systems called the "Curry-Howard correspondence", and a type system with higher
   ranked polymorphism corresponds to higher order predicate logic. Normal type system with vanilla generics corresponds to the
   familiar first order predicate logic we learned and used in highschool's math classes.
 
 # Conclusion
-- We are finally at the end of our rather lengthy tour (is it actually almost a journey at this point?) across the land of
+  We are finally at the end of our rather lengthy tour (is it actually almost a journey at this point?) across the land of
   generics. We brushed up the foundation of polymorphism and dive deeper into parametric polymorphism - generics - in particular,
   and its interplay when coexisting with other kinds of polymorphism with type bounds and variances. We then investigated how
   generics are typically implemented, and what implications the implementation approaches have over the performance of our generic
