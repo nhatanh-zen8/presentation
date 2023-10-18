@@ -274,7 +274,7 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   }
 ```
-  This obviously still leads to type system inconsistency that in turn results in runtime exception. Interestingly, in the former
+  This obviously still leads to type system inconsistency that in turn results in runtime exception. Curiously, in the former
   case we lose type safety under write, while in the latter case we lose type safety under read. Either way, does that mean
   there's fundamentally no inheritance relationship between generic types instantiated with types in an inheritance hierarchy
   whatsover? Not necessarily so: sometimes the only relationship we can assert between type `F<A>` and `F<B>` given `A` and `B` is
