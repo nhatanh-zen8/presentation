@@ -371,11 +371,13 @@ public interface Collection<E> extends Iterable<E> {...}
 
   The astute readers might have realized that covariance, contravariance and invariance are *insufficient* to correctly model
   phantom type's behavior: covariant type parameters must only appear in covariant position, contravariant must only appear in
-  contravariant position, invariant must be both (or else it must either be co-or contra-variant instead). Because a phantom type
-  parameter never appears anywhere in the generic type's definition, it's neither in covariant or contravariant position, thus it
-  also isn't invariant. We call this *phantom variance*, and currently the only language supporting phantom variance annotation in
-  industrial use is Haskell, but it doesn't have inheritance, in fact it isn't object-oriented at all. Phantom variance currently
-  has limited use and is only mentioned for completeness, thus won't be discussed further in this blog post.
+  contravariant position, invariant must appear in both positions (or else it must either be co-or contra-variant instead).
+  Because a phantom type parameter never appears anywhere in the generic type's definition, it's neither in covariant or
+  contravariant position, thus it also isn't invariant. We call this *phantom variance*, and currently the only language
+  supporting phantom variance annotation in industrial use is Haskell, but it doesn't have inheritance, in fact it isn't
+  object-oriented at all. Phantom variance currently has limited use and is only mentioned for completeness, thus won't be
+  discussed further in this blog post.
+  
 
 ![Lattice of variances](lattice.jpg)
 
