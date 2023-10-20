@@ -411,7 +411,8 @@ public interface Collection<E> extends Iterable<E> {...}
   Most modern languages that don't have to concern themselves with squeezing out every last bit of efficiency implement generics
   by type erasure though, since it's generally easier to use type erasure to implement other advanced type system features, such
   as higher ranked polymorphism. On the other hand, monomorphization can enable better code optimization at later phases of
-  compilation, because the compiler knows more specific type information at each use site and can optimize case by case accordingly.
+  compilation, because there's more specific type information at each use site, so the compiler has more information to decide
+  which optimization to apply accordingly.
 
 # Beyond generics
 ## Higher kinded type
@@ -461,14 +462,21 @@ public interface Collection<E> extends Iterable<E> {...}
     }
   ```
 
+  Recall the earlier `Map` example written in Golang, where the `Map` function can be seen as a unification of a family of similar
+  functions for the array generic collection type (i.e. `Map[A, B any]` can be specialized into` MapIntToInt`, `MapStringToBool`
+  etc..). The `fmap` function written in Scala above takes a step further: it unifies similar `map` methods for a family of
+  *generic collections* (i.e. `fmap[T[_], A, B](t: T[A])` can be specialized into `fmapArrayIntToInt`, `fmapArrayStringToBool`,
+  `fmapListIntToInt`, `fmapListStringToBool` etc...). Higher kinded type gives us programmers a whole new level of separation of
+  concerns to work with.
+
 ## Higher ranked polymorphism
   Another aspect where we can even be more polymorphic is the instantiation of the type parameters themselves. With vanilla
   generics, or even with higher kinded type, at the end of the day the use site of a generic value must be monomorphizable (even
   if you implement generics using type erasure), meaning you have to instantiate all type variables so that you always eventually
   end up with monomorphic type. Higher ranked polymorphism lifts this restriction for generic functions in particular.
 
-  The only language used in industry with support for higher ranked polymorphism is Haskell, so let's take at a simple example
-  where we want a function that takes a list transformation, then applies it to a list of `b` and a list of `c`. A naive
+  The only language used in industry with support for higher ranked polymorphism is Haskell, so let's take a look at a simple
+  example where we want a function that takes a list transformation, then applies it to a list of `b` and a list of `c`. A naive
   implementation would look like this:
 
 ```haskell
