@@ -483,10 +483,14 @@ public interface Collection<E> extends Iterable<E> {...}
   transform2Lists :: ([a] -> [a]) -> [b] -> [c] -> ([b],[c])
   transform2Lists f bList cList = (f bList, f cList) -- compilation error
 ```
+
   The reason this fails to compile is because the compiler is unable to unify `a` with `b` (and `c` too, but `b` is where the type
-  error occurs first). That is because at call site, the caller would definitely have to instantiate `a`, `b`, `c` with concrete
-  types, and each of them could be a different type, so the compiler can't assume anything about all three, much less unifying
-  them. What we *really* want here is to be able to pass a *polymorphic* function `f` at *call site*:
+  error occurs first). That is because at call site, the caller would have to instantiate `a`, `b`, `c` with concrete types, and
+  each of them could be a different type. The compiler can't assume anything about all three, much less unifying them. The `f`
+  function could be a generic function, but when passed to `transform2Lists`, its type variable `a` would still have to be
+  instantiated with a concrete type, just like the type variable `b` and `c` of the two lists also being passed to
+  `transform2Lists`. What we *really* want here is to be able to pass `f` as a *polymorphic* function at *call site*:
+
 ```haskell
   transform2Lists :: (forall a. [a] -> [a]) -> [b] -> [c] -> ([b],[c])
   transform2Lists f bList cList = (f bList, f cList) 
