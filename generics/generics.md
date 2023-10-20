@@ -498,7 +498,7 @@ public interface Collection<E> extends Iterable<E> {...}
 ```
   The type of the function `f` that `transform2Lists` expects is now `forall a. a -> a`, meaning `f` is polymorphic *at the call
   site* of `transform2Lists` and will only be instantiated into monomorphic function at call sites (plural!) in the body of
-  `transform2Lists`. Normal generic is called rank 1 polymorphism, and the type of `transform2Lists` is what we call a rank 2
+  `transform2Lists` (i.e. `f bList`, `f cList`). Normal generic is called rank 1 polymorphism, and the type of `transform2Lists` is what we call a rank 2
   polymorphic type, since you can pass a rank 1 polymorphic type as argument to `transform2Lists`.
 
   Notice the `forall a.` in the type signature, and recall the connection we made between generics and logic. There is a
