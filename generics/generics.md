@@ -1,5 +1,5 @@
-Across The Land Of Generics
-===========================
+Across The Land Of Generics, Part 1
+===================================
 
 ![Cup of T](cup-of-t.jpeg)
 
@@ -44,8 +44,9 @@ Keywords: static type, type system, generics, polymorphism, software engineering
 
   The first two are also classified as *universal polymosphism*, while the last two are *ad-hoc polymorphism*
   Many popular languages have all 4 forms of polymorphism to varying extents, inducing interactions between them.
-  As parametric polymorphism (generics) is the main focus of this blog post, we'll primarily explore the
-  generics/overloading interactions in *type bounds* and generics/inheritance interactions in *variance*
+  As parametric polymorphism (generics) is the main focus of this blog post series, we'll primarily explore the
+  generics/overloading interactions in *type bounds* in part 1, and generics/inheritance interactions in *variance* in the
+  upcoming part 2.
 
 # Generics
   Let's consider a motivating example using Golang, a major backend language in extensive use at zen8labs. Golang itself has very recently
@@ -206,9 +207,9 @@ public interface Collection<E> extends Iterable<E> {...}
   implemented the generic function like `Filter` above) can't assume anything about the concrete type, while usage site (e.g.
   the caller of `Filter`) decides which type to instantiate the type parameters as.
  
-  Dual to this, we have *existential quantified* types, where definition site of an existentially quantified value decides which type
-  to instantiate, while usage site can't assume anything. We can only claim that "there exists a type", possibly satisfies certain
-  type bound.
+  We also have a dual notion to that in *existential quantified* types, where definition site of an existentially quantified value
+  decides which type to instantiate, while usage site can't assume anything. We can only claim that "there exists a type",
+  possibly satisfies certain type bound.
  
   A familiar form of existentially quantified type is Java's `wildcard` (`<?>`):
   ```java
@@ -229,8 +230,30 @@ public interface Collection<E> extends Iterable<E> {...}
   }
   ```
   If the phrase "for all" and "there exists" ring familiar to you, then they probably are: these terms come directly from the
-  good old "for all" and "there exists" in logic. We'll come back to this later in this blog post.
+  good old "for all" and "there exists" in logic. We'll come back to this later in part 2 of this blog post series.
 
+# What's to expect in part 2
+  In the first part of this blog post series, we've learned what the types of polymorphism in programming are, and where generics
+  stand among them. We then explored the motivation behind generics, how generics help with local reasoning of code and how type
+  bounds and wildcards extend generics' expressive power. In the next part of the series, we'll delve deeper into generic
+  programming and examine the many possible *variance* of a type variable, how generics are typically implemented, and as a bonus,
+  some advanced and less discussed topics in generics programming - higher kinded type and higher ranked polymorphism. Stay tuned!
+
+ *Anh Ngo, Software Engineer*
+
+Across The Land Of Generics, Part 2
+===================================
+Keywords: variance, covariance, contravariance, invariance, generics, polymorphism, monomorphization, type erasure, higher kinded
+type, higher ranked polymorphism
+
+  The story so far: in the previous part of this blog post series, we've learned what the types of polymorphism in programming are,
+  and where generics stand among them. We then explored the motivation behind generics, how generics help with local reasoning of
+  code and how type bounds and wildcards extend generics' expressive power. In this second part of the series, we'll delve deeper
+  into generic programming and examine the many possible *variance* of a type variable, how generics are typically implemented,
+  and as a bonus, some advanced and less discussed topics in generics programming - higher kinded type and higher ranked
+  polymorphism.
+
+# Generics (cont.)
 ## Variance: Co/Contra/Invariance
 
 ![Variances](hierarchy.png)
@@ -376,7 +399,7 @@ public interface Collection<E> extends Iterable<E> {...}
   contravariant position, thus it also isn't invariant. We call this *phantom variance*, and currently the only language
   supporting phantom variance annotation in industrial use is Haskell, but it doesn't have inheritance, in fact it isn't
   object-oriented at all. Phantom variance currently has limited use and is only mentioned for completeness, thus won't be
-  discussed further in this blog post.
+  discussed further in this blog post series.
   
 
 ![Lattice of variances](lattice.jpg)
@@ -390,8 +413,8 @@ public interface Collection<E> extends Iterable<E> {...}
   "Monomorphic" is the opposite of "polymorphic", and the act of "monomorphization" is to make polymorphic code into monomorphic
   code. What that means here is, during compilation the compiler takes generic code at each use site, specialize it to the
   concrete type being instantiated there to generate corresponding monomorphic code instead. For example, the generic `Filter`
-  function earlier in this blog post would reversely be transformed into function similar to the monomorphic `FilterInt` and
-  `FilterString` to be used at call site with `Int` and `String` being instantiated, respectively.
+  function earlier in the first part of this blog post series would reversely be transformed into function similar to the
+  monomorphic `FilterInt` and `FilterString` to be used at call site with `Int` and `String` being instantiated, respectively.
 
   Since generic code is transformed into its monomorphic counterpart anyway, there's just no performance penalty at all.
   Instead, it takes more compilation time for code generation, and with all the code duplication, build artifacts
